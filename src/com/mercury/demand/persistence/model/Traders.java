@@ -8,11 +8,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
+//import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.JoinColumn;
+//import javax.persistence.JoinColumn;
 
 
 @Entity
@@ -31,6 +31,7 @@ public class Traders implements java.io.Serializable{
 	private Set<Transactions> tran = new HashSet<Transactions>();
 	
 	public Traders(){}
+
 	public Traders(String username, String password, String email,
 			double amount, String authority, Set<Stocks> stock,
 			Set<Transactions> tran) {
@@ -102,9 +103,9 @@ public class Traders implements java.io.Serializable{
 	
 	
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "owns", joinColumns = {
+   /*@JoinTable(name = "owns", joinColumns = {
     		@JoinColumn(name = "username") },
-    		inverseJoinColumns = { @JoinColumn(name = "companyname")})
+    		inverseJoinColumns = { @JoinColumn(name = "companyname")})*/
 
 	public Set<Stocks> getStock() {
 		return stock;

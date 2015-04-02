@@ -18,23 +18,30 @@ public class testTransactions {
 
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		
 		Session session = HibernateUtil.currentSession();
+		session.clear();
 		Transaction tx = session.beginTransaction();
 		
 		//the user in in transient status
 		Traders trader1 = new Traders("lily1", "123456","xiaoliyuan0311@gmail.com",5000.0,"A");
-		trader1.setAmount(4700.0);
+		trader1.setAmount(4900.0);
 		Stocks stock1 = new Stocks("company1", 2000);
-		stock1.setNumberofavailable(1200);
-		Transactions tran1 = new Transactions(1,"lily1","company1","B",100, new Date());
+		stock1.setNumberofavailable(1900);
+		Transactions tran1 = new Transactions(3,"lily1","company1","S",10, new Date());
 		tran1.setTrader(trader1);
 		tran1.setStock(stock1);	
 		session.save(tran1);
 		System.out.println("test1!");
 		
-		tx.commit();
+		try {
+			tx.commit();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		session.close();
+		//tx.commit();
 		updateOwns(tran1.getUsername(), tran1.getCompanyname(), tran1.getBuyorsell(), tran1.getQuantity());
 		System.out.println("test2!");
 		
@@ -78,13 +85,42 @@ public class testTransactions {
 			
 			if(rs.next()){
 				System.out.println("You should update owns here!");
+				if(buyorsell=="B"){
+					int highQuantity = rs.getInt("quantity")+quantity;
+					String sqlUpdate1 = "update owns set quantity=? where username=? AND companyname=?";
+                    
+					PreparedStatement st3 = conn.prepareStatement(sqlUpdate1);
+					st3.setInt(1, highQuantity);
+					st3.setString(2, username);
+					st3.setString(3,companyname);
+					st3.executeUpdate();
+					
+				}else{
+					int lowerQuantity = rs.getInt("quantity")-quantity;
+					if(lowerQuantity>=0){
+						String sqlUpdate2 = "update owns set quantity=? where username=? AND companyname=?";
+						PreparedStatement st4 = conn.prepareStatement(sqlUpdate2);
+						st4.setInt(1, lowerQuantity);
+						st4.setString(2, username);
+						st4.setString(3, companyname);
+						st4.executeUpdate();
+						
+					}else{
+						System.out.println("Sorry, you do not have so many stocks of this company to sell!");
+					}
+				}
+				
+				
 			} else if(buyorsell=="B")
 			{
+				
+				System.out.println("You need to insert new item in owns!");
 				String sqlInsert = "insert into owns (username, companyname, quantity) values (?,?,?)";
-				st.setString(1, username);
-				st.setString(2, companyname);
-				st.setInt(3, quantity);
-				st.executeUpdate(sqlInsert);
+				PreparedStatement st2 = conn.prepareStatement(sqlInsert);
+				st2.setString(1, username);
+				st2.setString(2, companyname);
+				st2.setInt(3, quantity);
+				st2.executeUpdate();
 			} else{
 				System.out.println("Sorry, you do not have this kind of stocks for selling!");
 			}

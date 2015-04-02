@@ -39,7 +39,8 @@
         <mapping class="com.mercury.demand.persistence.model.Traders"/>
         <mapping class="com.mercury.demand.persistence.model.Stocks"/>
         <mapping class="com.mercury.demand.persistence.model.Transactions"/>
-        <mapping class="com.mercury.demand.persistence.model.Owns"/>
+        
+     
       
         
     </session-factory>

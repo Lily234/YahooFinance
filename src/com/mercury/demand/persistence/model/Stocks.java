@@ -23,6 +23,7 @@ public class Stocks implements java.io.Serializable {
 	private Set<Transactions> tran = new HashSet<Transactions>();
 	
 	public Stocks(){}
+
 	public Stocks(String companyname, int numberofavailable,
 			Set<Traders> trader, Set<Transactions> tran) {
 		super();
@@ -31,6 +32,7 @@ public class Stocks implements java.io.Serializable {
 		this.trader = trader;
 		this.tran = tran;
 	}
+
 
 	public Stocks(String companyname, int numberofavailable) {
 		super();
